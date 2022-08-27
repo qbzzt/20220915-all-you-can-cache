@@ -198,4 +198,90 @@ contract CacheTest is Test {
 
     }    // testEncodeValBig
 
+
+    // Test what with an excessively small buffer we get a revert
+    function testShortCalldata() public {
+        address _cacheAddr = address(cache);
+        bool _success;
+        bytes memory _callInput;
+        bytes memory _callOutput;
+
+        // First call, the cache is empty
+        _callInput = bytes.concat(
+            FOUR_PARAMS,
+
+            // First value, add it to the cache 
+            cache.INTO_CACHE(),   
+            bytes32(VAL_A),
+
+            // Second value, don't add it to the cache
+            cache.DONT_CACHE(),
+            bytes32(VAL_B)
+
+            // We should send four parameters, but we only sent two
+        );
+        (_success, _callOutput) = _cacheAddr.call(_callInput);
+        assertEq(_success, false);
+    }   // testShortCalldata
+
+
+    // Call with cache keys that aren't there
+    function testNoCacheKey() public {
+        address _cacheAddr = address(cache);
+        bool _success;
+        bytes memory _callInput;
+        bytes memory _callOutput;
+
+        // First call, the cache is empty
+        _callInput = bytes.concat(
+            FOUR_PARAMS,
+
+            // First value, add it to the cache 
+            cache.INTO_CACHE(),   
+            bytes32(VAL_A),
+
+            // Second value
+            bytes1(0x0F),
+            bytes2(0x1234),
+            bytes11(0xA00102030405060708090A)
+        );
+        (_success, _callOutput) = _cacheAddr.call(_callInput);
+        assertEq(_success, false);
+    }   // testNoCacheKey
+
+
+    // Test what with an excessively long buffer everything works file
+    function testLongCalldata() public {
+        address _cacheAddr = address(cache);
+        bool _success;
+        bytes memory _callInput;
+        bytes memory _callOutput;
+
+        // First call, the cache is empty
+        _callInput = bytes.concat(
+            FOUR_PARAMS,
+
+            // First value, add it to the cache 
+            cache.INTO_CACHE(), bytes32(VAL_A),
+
+            // Second value, add it to the cache 
+            cache.INTO_CACHE(), bytes32(VAL_B),
+
+            // Third value, add it to the cache 
+            cache.INTO_CACHE(), bytes32(VAL_C),
+
+            // Fourth value, add it to the cache 
+            cache.INTO_CACHE(), bytes32(VAL_D),
+
+            // And another value for "good luck"
+            bytes4(0x31112233)
+        );
+        (_success, _callOutput) = _cacheAddr.call(_callInput);
+        assertEq(_success, true);
+        assertEq(toUint256(_callOutput,0),  VAL_A);
+        assertEq(toUint256(_callOutput,32), VAL_B);
+        assertEq(toUint256(_callOutput,64), VAL_C);
+        assertEq(toUint256(_callOutput,96), VAL_D);        
+    }   // testLongCalldata
+
 }        // CacheTest

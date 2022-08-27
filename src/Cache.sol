@@ -94,9 +94,9 @@ contract Cache {
 
 
     // Read n parameters (functions know how many parameters they expect)
-    function _readParams(uint _paramNum) internal returns (uint[256] memory) {
+    function _readParams(uint _paramNum) internal returns (uint[] memory) {
         // The parameters we read
-        uint[256] memory params;
+        uint[] memory params = new uint[](_paramNum);
 
         // Parameters start at byte 4, before that it's the function signature
         uint _atByte = 4;
@@ -116,7 +116,7 @@ contract Cache {
     function fourParam() public 
         returns (uint256,uint256,uint256,uint256) 
     {
-        uint[256] memory params;
+        uint[] memory params;
         params = _readParams(4);
         return (params[0], params[1], params[2], params[3]);
     }    // fourParam
