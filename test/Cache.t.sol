@@ -243,7 +243,7 @@ contract CacheTest is Test {
             // Second value
             bytes1(0x0F),
             bytes2(0x1234),
-            bytes11(0xA00102030405060708090A)
+            bytes11(0xA10102030405060708090A)
         );
         (_success, _callOutput) = _cacheAddr.call(_callInput);
         assertEq(_success, false);
