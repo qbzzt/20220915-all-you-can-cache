@@ -114,7 +114,6 @@ contract WORMTest is Test {
             assertEq(retVal, a); 
         }
 
-
         // If c is not already in the cache
         if (a != c && b != c) {
             _callInput = bytes.concat(
@@ -126,7 +125,12 @@ contract WORMTest is Test {
             assertEq(retVal, a); 
         }
 
-
+        // Also try a failure
+        _callInput = bytes.concat(
+            worm.WRITE_ENTRY_CACHED(), worm.encodeVal(a), worm.encodeVal(c));
+        (_success,) = address(worm).call(_callInput);
+        assertEq(_success, false);
+        assertEq(_callInput.length, 4+1*2);
     }  // testWithEncodeVal
 
 }  // WORMTest
