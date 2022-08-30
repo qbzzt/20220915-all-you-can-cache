@@ -45,9 +45,8 @@ const main = async () => {
     const entryRead = await worm.readEntry(realKey)
     console.log(`Entry:`)
     console.log(`  Value ${entryRead._value.toHexString()}`)
-    console.log(`  Written by: ${entryRead._writtenBy}`)
+    console.log(`  Written by: https://goerli-optimism.etherscan.io/address/${entryRead._writtenBy}`)
     console.log(`  At block: ${entryRead._writtenAtBlock}`)
-    console.log(entryRead)
 }     // main
 
 main().then(() => process.exit(0))
