@@ -2,7 +2,6 @@
 
 const ethers = require("ethers")
 const fs = require("fs")
-const { workerData } = require("worker_threads")
 require('dotenv').config()
 
 
