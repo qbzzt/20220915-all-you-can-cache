@@ -18,7 +18,7 @@ contract WORM is Cache {
 
     // An entry has been written. There is no need for the event to specify by whom or at what block,
     // because the event is connected to the transaction that initiated it.
-    event EntryWritten(uint key, uint value);
+    event EntryWritten(uint indexed key, uint indexed value);
 
     function writeEntry(uint _key, uint _value) public {
         require(entries[_key].writtenBy == address(0), "entry already written");
@@ -26,6 +26,8 @@ contract WORM is Cache {
         entries[_key].writtenBy = tx.origin;
         entries[_key].value = _value;
         entries[_key].writtenAtBlock = block.number;
+
+        emit EntryWritten(_key, _value);
     }   // writeEntry
 
 

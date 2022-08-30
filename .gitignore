@@ -1,2 +1,7 @@
 out
 cache
+
+*.delme
+.env
+node_modules
+

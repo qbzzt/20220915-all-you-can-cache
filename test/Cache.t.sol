@@ -57,7 +57,7 @@ contract CacheTest is Test {
         return tempUint;
     }     // toUint256
 
-    // Function signature for fourParams(), courtesy of
+    // Function signature for fourParam(), courtesy of
     // https://www.4byte.directory/signatures/?bytes4_signature=0x3edc1e6d
     bytes4 constant FOUR_PARAMS = 0x3edc1e6d;
 
@@ -199,7 +199,7 @@ contract CacheTest is Test {
     }    // testEncodeValBig
 
 
-    // Test what with an excessively small buffer we get a revert
+    // Test what happens with an excessively small buffer we get a revert
     function testShortCalldata() public {
         address _cacheAddr = address(cache);
         bool _success;

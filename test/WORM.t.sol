@@ -87,16 +87,20 @@ contract WORMTest is Test {
         (val,,) = worm.readEntry(0x5A6E);    
     }   // testReadWriteCached
 
+    event EntryWritten(uint indexed key, uint indexed value);
 
     // This tests every part of the system together
     // The parameters make Foundry turn on the fuzzer
-    function testWithEncodeVal(uint a, uint b, uint c) public {
+    function testFull(uint a, uint b, uint c) public {
         bool _success;
         bytes memory _callInput;
         uint retVal;
 
+
         _callInput = bytes.concat(
             worm.WRITE_ENTRY_CACHED(), worm.encodeVal(a), worm.encodeVal(b));
+        vm.expectEmit(true, true, false, false);
+        emit EntryWritten(a, b);
         (_success,) = address(worm).call(_callInput);
         assertEq(_success, true);
         assertEq(_callInput.length, 4+33*2);
@@ -104,9 +108,12 @@ contract WORMTest is Test {
         assertEq(retVal, b); 
 
         // Only create the reverse if a!=b, otherwise we'll get a failure
-        if (a != b) {
+        if (a != b) {                        
             _callInput = bytes.concat(
                 worm.WRITE_ENTRY_CACHED(), worm.encodeVal(b), worm.encodeVal(a));
+
+            vm.expectEmit(true, true, false, false);
+            emit EntryWritten(b, a);
             (_success,) = address(worm).call(_callInput);
             assertEq(_success, true);
             assertEq(_callInput.length, 4+1*2);
@@ -118,6 +125,8 @@ contract WORMTest is Test {
         if (a != c && b != c) {
             _callInput = bytes.concat(
                 worm.WRITE_ENTRY_CACHED(), worm.encodeVal(c), worm.encodeVal(a));
+            vm.expectEmit(true, true, false, false);
+            emit EntryWritten(c, a);                
             (_success,) = address(worm).call(_callInput);
             assertEq(_success, true);
             assertEq(_callInput.length, 4+33+1);
@@ -131,6 +140,6 @@ contract WORMTest is Test {
         (_success,) = address(worm).call(_callInput);
         assertEq(_success, false);
         assertEq(_callInput.length, 4+1*2);
-    }  // testWithEncodeVal
+    }  // testFull
 
 }  // WORMTest
