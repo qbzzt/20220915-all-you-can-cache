@@ -37,13 +37,13 @@ const main = async () => {
 
     const x = await sentTx.wait()
 
-    console.log(`Write transaction: https://goerli-optimism.etherscan.io/tx/${txHash}`)
+    console.log(`Write transaction: https://goerli-optimism.etherscan.io/tx/${txHash}\n`)
 
 
     // Read the entry just written
     const realKey = '0x' + key.slice(4)  // remove the FF flag
     const entryRead = await worm.readEntry(realKey)
-    console.log(`Entry:`)
+    console.log(`Entry read from the contract:`)
     console.log(`  Value ${entryRead._value.toHexString()}`)
     console.log(`  Written by: https://goerli-optimism.etherscan.io/address/${entryRead._writtenBy}`)
     console.log(`  At block: ${entryRead._writtenAtBlock}`)
